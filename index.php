@@ -133,6 +133,7 @@ echo "</div>";
         li[i].areExpand=true;
     }
 	<?php } ?>
+    let g = new Gallery(document.querySelectorAll('.fm'));
 </script>
 
 <style>
