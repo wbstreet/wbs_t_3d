@@ -24,40 +24,21 @@ $open = '<li data-id=[page_id] class="[if(class=menu-current||class=menu-parent)
 );
 
 $topnav = ob_get_contents();
-//$topnav = str_replace('menu-current','active',$topnav);
 ob_end_clean();
 	
 	
 ?>
 <header>
-	<div class="container">
-		<div class="row">
-			<a class="mobile-btn-menu" href="#" onclick="$('.navbar-default,.nav').toggle()"><img src="<?=WB_URL?>/media/img/mobile-menu.png"></a>
-			<nav class="navbar navbar-default" role="navigation">
-				<div class="container-fluid">
-					<div class="menu">
-						<?php echo $topnav; ?>
-					</div>
-				</div>			
-			</nav>
-		</div>
-	</div>
-	<?php 	echo show_breadcrumbs($sep = ' - ',$level = 1, $links = true, $depth = -1, $title = '<a href="'.WB_URL.'">Главная</a> - '); ?>
+	<div class="content">
+		<a class="mobile-btn-menu" href="#" onclick="$('.navbar-default,.nav').toggle()"><img src="<?=WB_URL?>/media/img/mobile-menu.png"></a>
+		<nav class="navbar navbar-default" role="navigation">
+			<div class="container-fluid">
+				<div class="menu">
+					<?php echo $topnav; ?>
+				</div>
+			</div>			
+		</nav>
+		<?php 	echo show_breadcrumbs($sep = ' - ',$level = 1, $links = true, $depth = -1, $title = '<a href="'.WB_URL.'">Главная</a> - '); ?>
+    </div>
+	<div class="bottom_info">закрыть</div>
 </header>
-
-<script>
-
-function go_link(e) {
-    e.preventDefault();
-    var link = e.target;
-    
-    var page_link = link.href.slice(WB_URL.length + <?php echo strlen(PAGES_DIRECTORY); ?>, -4);
-    
-    content_by_api('load_content', document.getElementsByClassName('main-content')[0], {url:'/test/templates/wbs_t_business/api.php', data:{page_link:page_link}})
-}
-
-var links = document.querySelectorAll('a');
-for (var link of links) {
-    link.addEventListener('click', go_link, false);
-}
-</script>

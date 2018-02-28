@@ -4,27 +4,14 @@ if(!defined('WB_URL')) {
 	exit(0);
 }	
 
-//Lets fetch some content for the slider from given page_ids:
-
-include(WB_PATH.'/templates/'.TEMPLATE."/config_template.php");
-
-$slider_page_ids = '3,4,5,6';
-$slider_image_base = WB_URL.'/media/slides/slide'; // added: number + .jpg
-
-
-
 ?><!DOCTYPE html>
 <html>
 <head>
-<?php
-if(function_exists('simplepagehead')) {
-	simplepagehead(); 
-} else { ?>
     <title><?php page_title(); ?></title>
     <meta http-equiv="Content-Type" content="text/html; charset=<?php if(defined('DEFAULT_CHARSET')) { echo DEFAULT_CHARSET; } else { echo 'utf-8'; }?>" />
     <meta name="description" content="<?php page_description(); ?>" />
     <meta name="keywords" content="<?php page_keywords(); ?>" />
-    <?php }
+    <?php
      if(function_exists('register_frontend_modfiles')) {
 	    register_frontend_modfiles('css');
 	    register_frontend_modfiles('jquery');
@@ -64,9 +51,6 @@ if(function_exists('simplepagehead')) {
 		ob_end_clean();
 	}
 	
-	if($page_content_2 == '') {$page_content_2 = '<img class="img-responsive" src="'.TEMPLATE_DIR.'/img/about.jpg" title="'.WEBSITE_TITLE.'" alt="" />';}
-	
-	
 	ob_start(); 
 	//show_menu2(1, SM2_ROOT, SM2_ALL, SM2_ALL, '<li class="[class]"><a href="[url]">[menu_title]</a>', "</li>", '<ul>', '</ul>', true, '<ul class="dropdown-menu" role="menu">');
 //	show_menu2(1, SM2_ROOT, SM2_START, SM2_TRIM, '<li class="[class]"><a href="[url]">[menu_title]</a>', "</li>", '<ul>', '</ul>', true, '<ul>');
@@ -82,91 +66,64 @@ if(function_exists('simplepagehead')) {
 	<a href="<?php echo WB_URL; ?>"><img height="100px" src="<?php echo WB_URL; ?>/media/common_img/logo.png" title="<?php echo WEBSITE_TITLE; ?>" alt="" /></a>
 </div>
 
-<div class="header" id="topnav">
-	<?php	include('snippets/nav.php');	?>
-	<!-- top-nav -->
-	<!-- script-for-nav -->
-	<script>
-		$(document).ready(function(){
-			$("span.menu").click(function(){
-				$("header ul").slideToggle(300);
-			});
-		});
-	</script>
-</div><!-- end header -->
-
-<?php  
-
-if (!isset($page_id)) { //extra for WB.at
-	include('snippets/bigslider.php');
-	include('frontteaser.php');
-	include('snippets/2col-content.php');
-} else {
-	//echo show_breadcrumbs($sep = ' - ',$level = 1, $links = true, $depth = -1, $title = '<a href="'.WB_URL.'">Главная</a> - ');
-	include('frontteaser.php');
-	include('snippets/2col-content.php');
-}
-
-echo "<div class='windowBody' id='feedback' data-text_title='Написать нам'>";
-include(__DIR__.'/snippets/form.php');
-echo "</div>";
-
-?>		
-		
-		
-		
-		<script src="<?php echo TEMPLATE_DIR; ?>/js/bootstrap.min.js"></script>
-
-    <!-- Для слайдера -->
-	<script src="<?php echo WB_URL; ?>/include/added_js/responsiveslides.min.js"></script>
-		
+<?php include('snippets/nav.php'); ?>
+<!-- top-nav -->
+<!-- script-for-nav -->
 <script>
-    <?php if ($config_template['icon_submenu']) { ?>
-   /* подстановка картинок в подпункты меню */
-    var li = document.querySelectorAll('.teaser-menu>li');
-    for (var i=0; i<li.length; i++) {
-        li[i].innerHTML = "<img style='height: 50px ;cursor:pointer;' data-toggle='dropdown' src='<?=WB_URL?>/media/menu/"+li[i].dataset.id+".png'><br>" + li[i].innerHTML;
-        //li[i].querySelector('a').setAttribute('aria-expanded', false);
-    }
-    var li = document.querySelectorAll('.teaser-menu2');
-    for (var i=0; i<li.length; i++) {
-        li[i].areExpand=true;
-    }
-	<?php } ?>
-    let g = new Gallery(document.querySelectorAll('.fm'));
+	$(document).ready(function(){
+		$("span.menu").click(function(){
+			$("header ul").slideToggle(300);
+		});
+	});
 </script>
 
-<style>
-   <?php if (!$config_template['icon_submenu']) { ?>
-   /* подпункты меню выравниваются вертикально */
-	.top-nav ul li {
-        display: block;
-        border-bottom: 1px solid #cccbcb;
-	}
-	.teaser-menu>li {
-      width: 100%;
-      text-align: left;
-       margin-top: 0;
-	}
-	
-	.dropdown-menu {
-	    min-width: 300px;
-	}
-	
-	.teaser-menu {
-       width: initial;
-	}
-	.navbar-nav > li > .dropdown-menu {
-    padding-bottom: 0;
-    }
-    .top-nav ul ul li a {
-        padding-bottom: 5px;
-        padding-top: 10px;
-        display: block !important;
-    }
-   <?php } ?>   
+<div id="content2" class="main-content-top"><?php echo $page_content_2; ?></div> 
 
-</style>
+<div class="main-content">
+	<div id="content1" class="content"><?php echo $page_content_1; ?></div>
+	<div class="bottom_info">закрыть</div>
+</div>
+
+<div class='windowBody' id='feedback' data-text_title='Написать нам'>
+    <?php include(__DIR__.'/snippets/form.php'); ?>
+</div>
 		
+<script src="<?php echo TEMPLATE_DIR; ?>/js/bootstrap.min.js"></script>
+
+<script>
+let g = new Gallery(document.querySelectorAll('.fm'));
+
+function go_link(e) {
+    e.preventDefault();
+    let link = e.target.closest('a');
+
+    if (link.dataset.toggle === 'dropdown') return;
+    
+    let page_link = link.href.slice(WB_URL.length + <?php echo strlen(PAGES_DIRECTORY); ?>, -4);
+    let c = link.dataset.c ? link.dataset.c : 'both';
+    
+    if (c === 'both') {
+        content_by_api('load_content', document.getElementById('content1'), {url:'/vsekurortru/templates/wbs_t_3d/api.php', data:{c:1, page_link:page_link}})
+        content_by_api('load_content', document.getElementById('content2'), {url:'/vsekurortru/templates/wbs_t_3d/api.php', data:{c:2, page_link:page_link, not_insert_empty:true}})
+    } else {
+        content_by_api('load_content', document.getElementById('content'+c), {url:'/vsekurortru/templates/wbs_t_3d/api.php', data:{c:c, page_link:page_link}})    	
+    }
+}
+
+$('a').click(go_link);
+
+$('.bottom_info').click(function(e) {
+	if (e.target.previousElementSibling.style.display !== 'none') {
+
+	    e.target.dataset.height = e.target.parentElement.style.height;
+
+    	e.target.previousElementSibling.style.display = 'none';
+	    $(e.target.parentElement).animate({height:'0'}, 250);
+	} else {
+	    $(e.target.parentElement).animate({height:'95%'}, 250);
+    	e.target.previousElementSibling.style.display = '';
+	}
+});
+</script>
 	</body>
 </html>

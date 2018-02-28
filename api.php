@@ -17,6 +17,7 @@ if ($action == 'load_content') {
     $wb->page_select() or die();
 
     $page_link = $clsFilter->f('page_link', [['1', 'Неверный id страницы']], 'default', $wb->default_link);
+    $c = $clsFilter->f('c', [['integer', 'Неверный id контента']], 'default', '1');
     $r = $database->query("SELECT * FROM `".TABLE_PREFIX."pages` WHERE `link`=\"".$database->escapeString($page_link)."\"");
     if ($database->is_error()) print_error($database->get_error());
     if ($r->numRows() == 0) print_error('Страница не найдена');
@@ -26,13 +27,23 @@ if ($action == 'load_content') {
     $wb->get_page_details();
     $wb->get_website_settings();
 
-
 	ob_start();		
-	page_content(1);
-	$page_content = $page_link.'<br><br>'.ob_get_contents();
+	page_content($c);
+	$page_content = ob_get_contents();
+	if ($page_content) $page_content .= "<script>$('#content".$c." a').click(go_link)</script>";
 	ob_end_clean();
-    
-    print_success($page_content);
+
+    /*if(file_exists(WB_PATH .'/modules/output_filter/index.php')) {
+        include_once(WB_PATH .'/modules/output_filter/index.php');
+        if(function_exists('executeFrontendOutputFilter')) {
+            $page_content = executeFrontendOutputFilter($page_content);
+        }
+    }*/
+
+    print_success(str_replace('{SYSVAR:MEDIA_REL}', 'media', $page_content));
+    //print_success($page_content);
+
+	
 } else {
     print_error('API name is incorrect');
 }
