@@ -28,17 +28,16 @@ ob_end_clean();
 	
 	
 ?>
-<header>
+<header class="swimming_block">
 	<div class="content">
-		<a class="mobile-btn-menu" href="#" onclick="$('.navbar-default,.nav').toggle()"><img src="<?=WB_URL?>/media/img/mobile-menu.png"></a>
-		<nav class="navbar navbar-default" role="navigation">
+		<a class="mobile-btn-menu" href="#" onclick="$('.navbar,.nav').toggle()"><img src="<?=WB_URL?>/media/img/mobile-menu.png"></a>
+		<nav class="navbar" role="navigation">
 			<div class="container-fluid">
 				<div class="menu">
 					<?php echo $topnav; ?>
 				</div>
 			</div>			
 		</nav>
-		<?php 	echo show_breadcrumbs($sep = ' - ',$level = 1, $links = true, $depth = -1, $title = '<a href="'.WB_URL.'">Главная</a> - '); ?>
     </div>
 	<div class="bottom_info">закрыть</div>
 </header>

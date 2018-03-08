@@ -32,6 +32,13 @@ if(!defined('WB_URL')) {
     <meta name="HandheldFriendly" content="true" />
     <meta name="MobileOptimized" content="320" />
 
+    <!-- blend4web -->
+    <?php $b4w = WB_URL.MEDIA_DIRECTORY."/b4w/"; ?>
+	<link id="b4w_css" type="text/css" rel="stylesheet" href="<?php echo $b4w; ?>office001/office001.min.css?v=04032018190718">
+	<script id="b4w_script_b4w" type="text/javascript" src="<?php echo $b4w; ?>office001/b4w.min.js?v=0403201819071"></script>
+	<script id="b4w_script" type="text/javascript" src="<?php echo $b4w; ?>office001/office001.min.js?v=04032018190718"></script>    
+    <!-- -->
+
     <?php if(function_exists('wbs_core_include')) wbs_core_include(['functions.js', 'windows.js', 'windows.css']); ?>
     <?php require_once(WB_PATH.'/include/captcha/captcha.php'); ?>
 </head>
@@ -61,6 +68,11 @@ if(!defined('WB_URL')) {
 ?>
 <body>
 
+<div id="content2" class="main-content-top">
+	<div id="main_canvas_container"></div>
+	<?php /*echo $page_content_2;*/ ?>
+</div> 
+
 <!-- header -->
 <div class="logo" id="logo">
 	<a href="<?php echo WB_URL; ?>"><img height="100px" src="<?php echo WB_URL; ?>/media/common_img/logo.png" title="<?php echo WEBSITE_TITLE; ?>" alt="" /></a>
@@ -77,10 +89,10 @@ if(!defined('WB_URL')) {
 	});
 </script>
 
-<div id="content2" class="main-content-top"><?php echo $page_content_2; ?></div> 
-
-<div class="main-content">
-	<div id="content1" class="content"><?php echo $page_content_1; ?></div>
+<div class="main-content swimming_block">
+	<div id="content1" class="content">
+		<?php echo $page_content_1; ?>
+	</div>
 	<div class="bottom_info">закрыть</div>
 </div>
 
@@ -95,7 +107,7 @@ let g = new Gallery(document.querySelectorAll('.fm'));
 
 function go_link(e) {
     e.preventDefault();
-    let link = e.target.closest('a');
+    let link = e.target;//.closest('a');
 
     if (link.dataset.toggle === 'dropdown') return;
     
@@ -106,24 +118,60 @@ function go_link(e) {
         content_by_api('load_content', document.getElementById('content1'), {url:'/vsekurortru/templates/wbs_t_3d/api.php', data:{c:1, page_link:page_link}})
         content_by_api('load_content', document.getElementById('content2'), {url:'/vsekurortru/templates/wbs_t_3d/api.php', data:{c:2, page_link:page_link, not_insert_empty:true}})
     } else {
-        content_by_api('load_content', document.getElementById('content'+c), {url:'/vsekurortru/templates/wbs_t_3d/api.php', data:{c:c, page_link:page_link}})    	
+        content_by_api('load_content', document.getElementById('content'+c), {url:'/vsekurortru/templates/wbs_t_3d/api.php', data:{c:c, page_link:page_link}})
     }
+    history.pushState({}, "", link.href);
 }
 
-$('a').click(go_link);
-
-$('.bottom_info').click(function(e) {
-	if (e.target.previousElementSibling.style.display !== 'none') {
-
-	    e.target.dataset.height = e.target.parentElement.style.height;
-
-    	e.target.previousElementSibling.style.display = 'none';
-	    $(e.target.parentElement).animate({height:'0'}, 250);
-	} else {
-	    $(e.target.parentElement).animate({height:'95%'}, 250);
-    	e.target.previousElementSibling.style.display = '';
+document.body.addEventListener('click', function(e) {
+	if (e.target.tagName === 'A') {
+		if (e.target.hostname === location.hostname) go_link(e);
 	}
 });
+
+$('.bottom_info').click(function(e) {
+	if (e.target.dataset.is_closed == '0') {
+		e.target.dataset.is_closed = '1';
+	    $(e.target.parentElement).animate({height:'30px'}, 250);
+       	e.target.previousElementSibling.style.display = 'none';
+	} else {
+		e.target.dataset.is_closed = '0';
+	    $(e.target.parentElement).animate({height:'95%'}, 250);
+       	e.target.previousElementSibling.style.display = 'block';
+	}
+});
+
+var b4w_path = '<?php echo $b4w; ?>';
+
+class scene_switcher {
+	
+	constructor(b4w) {
+		this.b4w = b4w;
+		this.data_ids = [];
+	}
+	
+	unload(data_id=null) {
+		if (this.data_ids.length === 0) return;
+
+		if (data_id === null) data_id = this.data_ids.splice(-1, 1)[0];
+		this.b4w.data.unload(data_id);
+	}
+	
+	load(scene_name) {
+		let data_id = this.b4w.data.load(scene_name);
+		this.data_ids.push(data_id);
+		return data_id;
+	}
+	
+	replace_last(scene_name) {
+		this.unload();
+		return this.load(scene_name);
+	}
+	
+}
+
+var sw = new scene_switcher(b4w);
 </script>
+
 	</body>
 </html>

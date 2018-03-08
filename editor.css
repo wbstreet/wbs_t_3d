@@ -95,14 +95,6 @@ address {
 	}
 
 
-blockquote {
-	background:transparent url(images/bg50.png);
-	font-size:0.9em;
-	padding: 10px;
-	border-left: 2px solid #4d7f88;
-	margin: 3px 0 20px 5%;
-}
-
 pre, code {
 	padding: 0 0 20px 6px;
 	margin: 3px 0 20px 0;
@@ -129,7 +121,7 @@ table {
 }
 table caption {font-size:1.1em; text-align:left; }
 table th {font-size:0.9em; padding: 4px; text-align:left; vertical-align: top;  background:transparent url(images/bg75.png); border-bottom: 1px solid #4d7f88;}
-table tbody td {font-size:0.9em; padding: 4px; vertical-align: top;  background:transparent url(images/bg50.png); /*border-bottom: 1px solid #4d7f88;*/}
+table tbody td {font-size:0.9em; padding: 4px; vertical-align: top; }
 tbody td p, tbody td h1, tbody td h2, tbody td h3, tbody td h4 {margin: 0; line-height:110%;}
 
 

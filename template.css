@@ -23,15 +23,9 @@ span.menu{
 
 /*-- main content --*/
 .main-content-top {
-    //height:30px;
-    
-}
-
-.main-content {
-	border: 1px solid #eee;
-	padding: 3%;
-	margin: 0 0 0 0;
-//	min-height: calc(100vh - 553px);
+	position:relative;
+    height: 100vh;
+    width: 100%;
 }
 
 .main-content h2 {
@@ -71,20 +65,26 @@ span.menu{
 
 /* Новые стили */
 
-.main-content {
+.swimming_block {
+    height:0;
     position: fixed;
+}
+
+.main-content {
+	margin: 0 0 0 0;
     bottom: 25px;
     right: 25px;
-    padding: 10px;
+    padding: 10px 10px 0 10px;
     width: 40%;
-    height: 95%/*calc(100vh - 50px)*/;
-    background: #999999d8;
+    background: #ffffffd8;
 }
 
 .content {
     overflow-y: auto;
     overflow-x: hidden;	
     height: calc(100% - 10px);
+    padding-bottom:30px;
+    display:none;
 }
 
 .bottom_info {
@@ -95,19 +95,28 @@ span.menu{
     background: #8c8888;
     color: #ffffff;
     padding: 5px;
+    height: 30px;
+    cursor: pointer;
 }
 
 header {
-    position: fixed;
     background: #999999e9;
     bottom: 25px;
     left: 25px;
     width: 200px;
-    overflow-x: hidden;
-    overflow-y: auto;
-    height: 320px;
+
+    max-height: 320px;
 }
 
+.navbar-nav > li > a {
+    color: #2e3147;
+    padding-left: 10px;
+}
+
+.navbar-nav > li > a:hover, .navbar-nav > li > a:focus {
+    color: #fff;
+    background-color: #2e3147;
+}
 .navbar-nav {
     width: 100%;
 }
@@ -117,10 +126,7 @@ header {
 }
 
 .breadcrumb {
-    position: absolute;
-    bottom: 0;
     width: 100%;
-    background-color: #a7a7a7;
     margin-bottom: 0px;
 }
 

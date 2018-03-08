@@ -28,9 +28,9 @@ if ($action == 'load_content') {
     $wb->get_website_settings();
 
 	ob_start();		
-	page_content($c);
+    	page_content($c);
+        if ($c == '1') show_breadcrumbs($sep = ' - ',$level = 1, $links = true, $depth = -1, $title = '<a href="'.WB_URL.'">Главная</a> - ');
 	$page_content = ob_get_contents();
-	if ($page_content) $page_content .= "<script>$('#content".$c." a').click(go_link)</script>";
 	ob_end_clean();
 
     /*if(file_exists(WB_PATH .'/modules/output_filter/index.php')) {
@@ -39,8 +39,8 @@ if ($action == 'load_content') {
             $page_content = executeFrontendOutputFilter($page_content);
         }
     }*/
-
-    print_success(str_replace('{SYSVAR:MEDIA_REL}', 'media', $page_content));
+    
+    print_success(str_replace(['{SYSVAR:MEDIA_REL}', '{WB_URL}'], ['media', WB_URL], $page_content));
     //print_success($page_content);
 
 	
